@@ -1,12 +1,56 @@
 /* styles.css */
-.product-image-container {
-    width: 200px;
-    height: 200px;
+
+/* การจัดวางสินค้าในแต่ละแถวให้แสดง 3 รายการต่อแถว */
+
+.product-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 คอลัมน์สำหรับหน้าจอขนาดใหญ่ */
+    gap: 20px;
+    margin-top: 20px;
+  }
+  
+  /* ปรับการแสดงผลเป็น 2 คอลัมน์สำหรับหน้าจอขนาดกลาง */
+  @media (max-width: 1024px) {
+    .product-container {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  /* ปรับการแสดงผลเป็น 1 คอลัมน์สำหรับหน้าจอขนาดเล็ก */
+  @media (max-width: 768px) {
+    .product-container {
+      grid-template-columns: repeat(1, 1fr);
+    }
+  }
+  
+  /* สไตล์สำหรับการ์ดสินค้า */
+  .product-card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%; /* ทำให้การ์ดมีความสูงเท่ากัน */
+  }
+  
+  /* เอเฟกต์การ์ดสินค้าเมื่อ hover */
+  .product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* ทำให้รูปภาพมีขนาดและตำแหน่งเท่ากัน */
+  .product-image-container {
+    height: 250px;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f0f0f0;
-    overflow: hidden;
+    background-color: #f5f5f5;
+    margin-bottom: 15px; /* เว้นช่องว่างระหว่างรูปภาพกับชื่อสินค้า */
   }
   
   .product-image {
@@ -15,14 +59,49 @@
     object-fit: contain;
   }
   
+  /* ปรับสีตัวหนังสือให้เป็นสีดำ และจัดการตำแหน่ง */
+  .product-info h2 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: black; /* ปรับสีตัวหนังสือเป็นสีดำสำหรับชื่อสินค้า */
+  }
+  
+  .product-info p {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    color: black; /* ปรับสีตัวหนังสือเป็นสีดำสำหรับราคา */
+  }
+  
+  /* ปุ่ม Add to Cart */
+  .product-info button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: auto; /* ทำให้ปุ่มอยู่ด้านล่างสุด */
+  }
+  
+  .product-info button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* เพิ่มระยะห่างสำหรับ Your Cart */
+  .cart-title {
+    margin-top: 50px; /* ระยะห่างจากสินค้าด้านบน */
+  }
+  
+  /* การจัดการขนาดรูปภาพในตะกร้า */
   .cart-image-container {
-    width: 60px;
-    height: 60px;
+    width: 80px;  /* ขนาดความกว้างของรูปภาพใน cart */
+    height: 80px; /* ขนาดความสูงของรูปภาพใน cart */
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f0f0f0;
-    overflow: hidden;
+    background-color: #f5f5f5;
   }
   
   .cart-image {
@@ -30,4 +109,11 @@
     max-height: 100%;
     object-fit: contain;
   }
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  
   

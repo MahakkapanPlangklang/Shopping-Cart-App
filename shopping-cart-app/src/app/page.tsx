@@ -73,26 +73,25 @@ export default function Page() {
       <h1 className="text-4xl font-bold mb-10 text-center text-gray-800">Shopping Cart</h1>
 
       {/* แสดงสินค้า */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="product-container">
         {initialProducts.map((product) => (
-          <div key={product.id} className="border p-6 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-2 bg-white">
+          <div key={product.id} className="product-card">
             <div className="product-image-container">
               <img src={product.image} alt={product.name} className="product-image" />
             </div>
-            <h2 className="text-xl mt-4 font-semibold text-gray-800">{product.name}</h2>
-            <p className="mt-2 text-lg text-gray-600">{formatPrice(product.price)}</p>
-            <button
-              onClick={() => addToCart(product)}
-              className="bg-blue-600 text-white px-4 py-2 mt-4 rounded-lg hover:bg-blue-700 transition duration-300 w-full"
-            >
-              Add to Cart
-            </button>
+            <div className="product-info">
+              <h2>{product.name}</h2>
+              <p>{formatPrice(product.price)}</p>
+              <button onClick={() => addToCart(product)}>
+                Add to Cart
+              </button>
+            </div>
           </div>
         ))}
       </div>
 
-      {/* แสดงตะกร้าสินค้า */}
-      <h2 className="text-3xl font-semibold mt-12 text-center text-gray-800">Your Cart</h2>
+      {/* เพิ่มคลาส cart-title เพื่อเว้นระยะห่าง */}
+      <h2 className="cart-title text-3xl font-semibold mt-12 text-center text-gray-800">Your Cart</h2>
       {cart.length > 0 ? (
         <div className="mt-8">
           {cart.map((item) => (
