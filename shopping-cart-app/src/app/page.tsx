@@ -1,8 +1,22 @@
 'use client';
 import { useState } from 'react';
+import Image from 'next/image';
 import './styles.css';  // เรียกใช้ไฟล์ CSS ที่สร้างขึ้น
 
-const initialProducts = [
+// สร้าง interface สำหรับสินค้า
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+}
+
+// สร้าง interface สำหรับสินค้าในตะกร้า ซึ่งจะมี property quantity
+interface CartItem extends Product {
+  quantity: number;
+}
+
+const initialProducts: Product[] = [
   { id: 1, name: 'iPhone 15 Pro', price: 42900, image: 'https://www.istudio.store/cdn/shop/files/TH_iPhone_15_Pro_Natural_Titanium_PDP_Image_Position-1A_Natural_Titanium_Color.jpg?v=1707277926&width=1445' },
   { id: 2, name: 'iPhone 15', price: 32900, image: 'https://www.istudio.store/cdn/shop/files/TH_iPhone_15_Blue_PDP_Image_Position-1A_Blue_Color.jpg?v=1707277872&width=1445' },
   { id: 3, name: 'iPad Pro', price: 32900, image: 'https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/ipad-pro-finish-unselect-gallery-2-202405_FMT_WHH?wid=1280&hei=720&fmt=p-jpg&qlt=80&.v=YXpaUEtKWGhlNnNrVGZkTEo4T0xsN2dzSmpObkZCM3MrNmJ5SkhESlNDaktqSkExTHB4VHJRR1hzOGdBenBuczN0bWR6ME9RYmIrVG9PSXZFalM2aHdBb0pjWml6bllCL0Y5a1RKc2gxZjlIaERUT3FJbHFiWTlmb2lodm1tWE55UjVHcmIzQTc0UDFXY0hsUWdxUDFRPT0=&traceId=1' },
@@ -17,12 +31,10 @@ const initialProducts = [
 ];
 
 export default function Page() {
-  const [cart, setCart] = useState<
-    { id: number; name: string; price: number; image: string; quantity: number }[]
-  >([]);
+  const [cart, setCart] = useState<CartItem[]>([]); // ใช้ CartItem สำหรับสินค้าในตะกร้า
 
   // เพิ่มสินค้าไปยังตะกร้า
-  const addToCart = (product: any) => {
+  const addToCart = (product: Product) => {
     setCart((prevCart) => {
       const productInCart = prevCart.find((item) => item.id === product.id);
       if (productInCart) {
@@ -30,7 +42,7 @@ export default function Page() {
           item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
         );
       } else {
-        return [...prevCart, { ...product, quantity: 1 }];
+        return [...prevCart, { ...product, quantity: 1 }]; // เพิ่ม quantity เป็น 1
       }
     });
   };
@@ -77,20 +89,18 @@ export default function Page() {
         {initialProducts.map((product) => (
           <div key={product.id} className="product-card">
             <div className="product-image-container">
-              <img src={product.image} alt={product.name} className="product-image" />
+              <Image src={product.image} alt={product.name} width={500} height={500} className="product-image" /> {/* ใช้ Image แทน img */}
             </div>
             <div className="product-info">
               <h2>{product.name}</h2>
               <p>{formatPrice(product.price)}</p>
-              <button onClick={() => addToCart(product)}>
-                Add to Cart
-              </button>
+              <button onClick={() => addToCart(product)}>Add to Cart</button>
             </div>
           </div>
         ))}
       </div>
 
-      {/* เพิ่มคลาส cart-title เพื่อเว้นระยะห่าง */}
+      {/* แสดงรายการในตะกร้า */}
       <h2 className="cart-title text-3xl font-semibold mt-12 text-center text-gray-800">Your Cart</h2>
       {cart.length > 0 ? (
         <div className="mt-8">
@@ -98,36 +108,16 @@ export default function Page() {
             <div key={item.id} className="flex items-center justify-between border-b py-6">
               <div className="flex items-center">
                 <div className="cart-image-container">
-                  <img src={item.image} alt={item.name} className="cart-image" />
+                  <Image src={item.image} alt={item.name} width={80} height={80} className="cart-image" />
                 </div>
                 <div className="ml-4">
                   <h3 className="text-lg text-gray-800">{item.name}</h3>
                   <p className="text-sm text-gray-500">Price: {formatPrice(item.price)}</p>
                   <p className="text-sm text-gray-500">Quantity: {item.quantity}</p>
                   <div className="flex items-center mt-2">
-                    {/* ปุ่มลดจำนวนสินค้า */}
-                    <button
-                      onClick={() => decreaseQuantity(item.id)}
-                      className="bg-gray-300 px-2 py-1 rounded"
-                    >
-                      -
-                    </button>
-
-                    {/* ปุ่มเพิ่มจำนวนสินค้า */}
-                    <button
-                      onClick={() => increaseQuantity(item.id)}
-                      className="bg-gray-300 px-2 py-1 rounded ml-2"
-                    >
-                      +
-                    </button>
-
-                    {/* ปุ่มลบสินค้า */}
-                    <button
-                      onClick={() => removeFromCart(item.id)}
-                      className="bg-red-500 text-white px-4 py-2 ml-4 rounded-lg hover:bg-red-700 transition duration-300"
-                    >
-                      Remove
-                    </button>
+                    <button onClick={() => decreaseQuantity(item.id)} className="bg-gray-300 px-2 py-1 rounded">-</button>
+                    <button onClick={() => increaseQuantity(item.id)} className="bg-gray-300 px-2 py-1 rounded ml-2">+</button>
+                    <button onClick={() => removeFromCart(item.id)} className="bg-red-500 text-white px-4 py-2 ml-4 rounded-lg hover:bg-red-700 transition duration-300">Remove</button>
                   </div>
                 </div>
               </div>

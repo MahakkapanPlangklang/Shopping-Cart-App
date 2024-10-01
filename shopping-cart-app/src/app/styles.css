@@ -1,7 +1,4 @@
-/* styles.css */
-
 /* การจัดวางสินค้าในแต่ละแถวให้แสดง 3 รายการต่อแถว */
-
 .product-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* 3 คอลัมน์สำหรับหน้าจอขนาดใหญ่ */
@@ -109,11 +106,4 @@
     max-height: 100%;
     object-fit: contain;
   }
-  .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-  }
-  
   
