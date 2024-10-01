@@ -1,9 +1,8 @@
 'use client';
 import { useState } from 'react';
 import Image from 'next/image';
-import './styles.css';  // เรียกใช้ไฟล์ CSS ที่สร้างขึ้น
+import './styles.css';  
 
-// สร้าง interface สำหรับสินค้า
 interface Product {
   id: number;
   name: string;
@@ -11,7 +10,6 @@ interface Product {
   image: string;
 }
 
-// สร้าง interface สำหรับสินค้าในตะกร้า ซึ่งจะมี property quantity
 interface CartItem extends Product {
   quantity: number;
 }
@@ -31,9 +29,8 @@ const initialProducts: Product[] = [
 ];
 
 export default function Page() {
-  const [cart, setCart] = useState<CartItem[]>([]); // ใช้ CartItem สำหรับสินค้าในตะกร้า
+  const [cart, setCart] = useState<CartItem[]>([]); 
 
-  // เพิ่มสินค้าไปยังตะกร้า
   const addToCart = (product: Product) => {
     setCart((prevCart) => {
       const productInCart = prevCart.find((item) => item.id === product.id);
@@ -42,17 +39,15 @@ export default function Page() {
           item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
         );
       } else {
-        return [...prevCart, { ...product, quantity: 1 }]; // เพิ่ม quantity เป็น 1
+        return [...prevCart, { ...product, quantity: 1 }]; 
       }
     });
   };
 
-  // ลบสินค้าออกจากตะกร้า
   const removeFromCart = (id: number) => {
     setCart((prevCart) => prevCart.filter((item) => item.id !== id));
   };
 
-  // เพิ่มจำนวนสินค้าในตะกร้า
   const increaseQuantity = (id: number) => {
     setCart((prevCart) =>
       prevCart.map((item) =>
@@ -61,7 +56,6 @@ export default function Page() {
     );
   };
 
-  // ลดจำนวนสินค้าในตะกร้า
   const decreaseQuantity = (id: number) => {
     setCart((prevCart) =>
       prevCart.map((item) =>
@@ -72,24 +66,22 @@ export default function Page() {
     );
   };
 
-  // รูปแบบการแสดงผลราคา
   const formatPrice = (price: number) => {
     return price.toLocaleString('th-TH', { style: 'currency', currency: 'THB' });
   };
 
-  // คำนวณราคารวมของสินค้าในตะกร้า
+ 
   const totalCartPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
 
   return (
     <div className="container mx-auto p-5">
       <h1 className="text-4xl font-bold mb-10 text-center text-gray-800">Shopping Cart</h1>
 
-      {/* แสดงสินค้า */}
       <div className="product-container">
         {initialProducts.map((product) => (
           <div key={product.id} className="product-card">
             <div className="product-image-container">
-              <Image src={product.image} alt={product.name} width={500} height={500} className="product-image" /> {/* ใช้ Image แทน img */}
+              <Image src={product.image} alt={product.name} width={500} height={500} className="product-image" /> 
             </div>
             <div className="product-info">
               <h2>{product.name}</h2>
@@ -100,7 +92,6 @@ export default function Page() {
         ))}
       </div>
 
-      {/* แสดงรายการในตะกร้า */}
       <h2 className="cart-title text-3xl font-semibold mt-12 text-center text-gray-800">Your Cart</h2>
       {cart.length > 0 ? (
         <div className="mt-8">
@@ -122,12 +113,10 @@ export default function Page() {
                 </div>
               </div>
 
-              {/* แสดงราคารวมของสินค้า */}
               <p className="text-lg text-gray-800">{formatPrice(item.price * item.quantity)}</p>
             </div>
           ))}
 
-          {/* แสดงราคารวมของสินค้าทั้งหมดในตะกร้า */}
           <div className="text-right mt-6">
             <h3 className="text-2xl font-bold text-gray-800">Total: {formatPrice(totalCartPrice)}</h3>
           </div>

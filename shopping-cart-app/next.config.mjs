@@ -15,8 +15,8 @@ const nextConfig = {
         },
         {
           protocol: 'https',
-          hostname: 'cdsassets.apple.com', // เพิ่มโฮสต์นี้
-          pathname: '/**', // อนุญาตให้เข้าถึงไฟล์ทุกเส้นทางภายใต้โฮสต์นี้
+          hostname: 'cdsassets.apple.com', 
+          pathname: '/**', 
         },
       ],
     },
