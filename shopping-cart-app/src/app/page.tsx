@@ -1,95 +1,151 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
+import { useState } from 'react';
+import './styles.css';  // เรียกใช้ไฟล์ CSS ที่สร้างขึ้น
 
-export default function Home() {
+const initialProducts = [
+  { id: 1, name: 'iPhone 15 Pro', price: 42900, image: 'https://www.istudio.store/cdn/shop/files/TH_iPhone_15_Pro_Natural_Titanium_PDP_Image_Position-1A_Natural_Titanium_Color.jpg?v=1707277926&width=1445' },
+  { id: 2, name: 'iPhone 15', price: 32900, image: 'https://www.istudio.store/cdn/shop/files/TH_iPhone_15_Blue_PDP_Image_Position-1A_Blue_Color.jpg?v=1707277872&width=1445' },
+  { id: 3, name: 'iPad Pro', price: 32900, image: 'https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/ipad-pro-finish-unselect-gallery-2-202405_FMT_WHH?wid=1280&hei=720&fmt=p-jpg&qlt=80&.v=YXpaUEtKWGhlNnNrVGZkTEo4T0xsN2dzSmpObkZCM3MrNmJ5SkhESlNDaktqSkExTHB4VHJRR1hzOGdBenBuczN0bWR6ME9RYmIrVG9PSXZFalM2aHdBb0pjWml6bllCL0Y5a1RKc2gxZjlIaERUT3FJbHFiWTlmb2lodm1tWE55UjVHcmIzQTc0UDFXY0hsUWdxUDFRPT0=&traceId=1' },
+  { id: 4, name: 'iPad Air', price: 19900, image: 'https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/ipad-air-storage-select-202405-11inch-blue-wifi_FMT_WHH?wid=1280&hei=720&fmt=p-jpg&qlt=80&.v=TENLTVRoeFdHUUI5ZE1ZZmxpQUlNMm5pQUoxb0NIVEJFSjRVRzZ4dzV5U1FlOUdhQlk1UEtGbkd3TUk4RW5YMThiZjRKRUJ6ZU96N3VHVCtXdS9WdVVCNWUrcXd0bG5Na3hKOEEyeFZtNE45Q2drLzhtOFgzejV4MENrZ0JFZVBYWlVOYndCL3BHZGxSTXNxSlZHZlZ3PT0=&traceId=1' },
+  { id: 5, name: 'iPad', price: 17900, image: 'https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/ipad-10th-gen-finish-select-202212-blue-wifi_FMT_WHH?wid=1280&hei=720&fmt=p-jpg&qlt=80&.v=OVJOVlhQelp3cUxDNnpBK0hFNFYrQUxaUVVtOUhUT0c2NzZRUllPeEJTd2Nla0ZzY0hJUkxYWE1PZHIramdKSGJWU3RPOURZS0RCaG1weXBRYytNTENhUThSUC84VzArL0cyckNrL25wa0VEaXdsQXhSUVJEK2lURHg1RU5ZZUNWcnlSVk40T21vTFdCcWxRSGNlUFBRPT0=&traceId=1' },
+  { id: 6, name: 'iPad mini', price: 17900, image: 'https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/ipad-mini-finish-unselect-gallery-1-202207_FMT_WHH?wid=1280&hei=720&fmt=p-jpg&qlt=80&.v=eDJDc00wczl1QWk5QmpVYitFNXQwOVgrSXpWVEhWaW9YTGlWRHFoSHU0OG5mNEIvMUVsODRNNlRVVkNDQ2g4akpxbExkakZwOW1FVDBpNHlyYVFtRnM2c3NSYUM4YjA0RTQxLytvRzE4M0EvQzZsTkY3bUlhQXlnYVQ4OG1ybUl3bnNtc1k3Q0ZsRTVFSitUaitMYlFBPT0=&traceId=1' },
+  { id: 7, name: 'MacBook Air', price: 38900, image: 'https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/mba13-midnight-select-202402?wid=904&hei=840&fmt=jpeg&qlt=90&.v=1708367688034' },
+  { id: 8, name: 'MacBook Pro', price: 72900, image: 'https://cdsassets.apple.com/live/SZLF0YNV/images/sp/111339_sp818-mbp13touch-silver-select-202005.png' },
+  { id: 9, name: 'iMac', price: 45900, image: 'https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/imac-24-no-id-blue-selection-hero-202310?wid=904&hei=840&fmt=jpeg&qlt=90&.v=1701459101618' },
+  { id: 10, name: 'Mac mini', price: 22900, image: 'https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/mac-mini-hero-202301_FMT_WHH?wid=904&hei=840&fmt=jpeg&qlt=90&.v=1671503802341' },
+  { id: 11, name: 'Mac Studio', price: 69900, image: 'https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/mac-studio-202306-gallery-2?wid=4000&hei=3074&fmt=jpeg&qlt=90&.v=1683939204939' },
+];
+
+export default function Page() {
+  const [cart, setCart] = useState<
+    { id: number; name: string; price: number; image: string; quantity: number }[]
+  >([]);
+
+  // เพิ่มสินค้าไปยังตะกร้า
+  const addToCart = (product: any) => {
+    setCart((prevCart) => {
+      const productInCart = prevCart.find((item) => item.id === product.id);
+      if (productInCart) {
+        return prevCart.map((item) =>
+          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+        );
+      } else {
+        return [...prevCart, { ...product, quantity: 1 }];
+      }
+    });
+  };
+
+  // ลบสินค้าออกจากตะกร้า
+  const removeFromCart = (id: number) => {
+    setCart((prevCart) => prevCart.filter((item) => item.id !== id));
+  };
+
+  // เพิ่มจำนวนสินค้าในตะกร้า
+  const increaseQuantity = (id: number) => {
+    setCart((prevCart) =>
+      prevCart.map((item) =>
+        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+      )
+    );
+  };
+
+  // ลดจำนวนสินค้าในตะกร้า
+  const decreaseQuantity = (id: number) => {
+    setCart((prevCart) =>
+      prevCart.map((item) =>
+        item.id === id && item.quantity > 1
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
+      )
+    );
+  };
+
+  // รูปแบบการแสดงผลราคา
+  const formatPrice = (price: number) => {
+    return price.toLocaleString('th-TH', { style: 'currency', currency: 'THB' });
+  };
+
+  // คำนวณราคารวมของสินค้าในตะกร้า
+  const totalCartPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="container mx-auto p-5">
+      <h1 className="text-4xl font-bold mb-10 text-center text-gray-800">Shopping Cart</h1>
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+      {/* แสดงสินค้า */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {initialProducts.map((product) => (
+          <div key={product.id} className="border p-6 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-2 bg-white">
+            <div className="product-image-container">
+              <img src={product.image} alt={product.name} className="product-image" />
+            </div>
+            <h2 className="text-xl mt-4 font-semibold text-gray-800">{product.name}</h2>
+            <p className="mt-2 text-lg text-gray-600">{formatPrice(product.price)}</p>
+            <button
+              onClick={() => addToCart(product)}
+              className="bg-blue-600 text-white px-4 py-2 mt-4 rounded-lg hover:bg-blue-700 transition duration-300 w-full"
+            >
+              Add to Cart
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {/* แสดงตะกร้าสินค้า */}
+      <h2 className="text-3xl font-semibold mt-12 text-center text-gray-800">Your Cart</h2>
+      {cart.length > 0 ? (
+        <div className="mt-8">
+          {cart.map((item) => (
+            <div key={item.id} className="flex items-center justify-between border-b py-6">
+              <div className="flex items-center">
+                <div className="cart-image-container">
+                  <img src={item.image} alt={item.name} className="cart-image" />
+                </div>
+                <div className="ml-4">
+                  <h3 className="text-lg text-gray-800">{item.name}</h3>
+                  <p className="text-sm text-gray-500">Price: {formatPrice(item.price)}</p>
+                  <p className="text-sm text-gray-500">Quantity: {item.quantity}</p>
+                  <div className="flex items-center mt-2">
+                    {/* ปุ่มลดจำนวนสินค้า */}
+                    <button
+                      onClick={() => decreaseQuantity(item.id)}
+                      className="bg-gray-300 px-2 py-1 rounded"
+                    >
+                      -
+                    </button>
+
+                    {/* ปุ่มเพิ่มจำนวนสินค้า */}
+                    <button
+                      onClick={() => increaseQuantity(item.id)}
+                      className="bg-gray-300 px-2 py-1 rounded ml-2"
+                    >
+                      +
+                    </button>
+
+                    {/* ปุ่มลบสินค้า */}
+                    <button
+                      onClick={() => removeFromCart(item.id)}
+                      className="bg-red-500 text-white px-4 py-2 ml-4 rounded-lg hover:bg-red-700 transition duration-300"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* แสดงราคารวมของสินค้า */}
+              <p className="text-lg text-gray-800">{formatPrice(item.price * item.quantity)}</p>
+            </div>
+          ))}
+
+          {/* แสดงราคารวมของสินค้าทั้งหมดในตะกร้า */}
+          <div className="text-right mt-6">
+            <h3 className="text-2xl font-bold text-gray-800">Total: {formatPrice(totalCartPrice)}</h3>
+          </div>
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      ) : (
+        <p className="mt-8 text-center text-gray-500">Your cart is empty</p>
+      )}
     </div>
   );
 }

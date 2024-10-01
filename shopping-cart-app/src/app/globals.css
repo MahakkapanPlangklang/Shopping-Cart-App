@@ -1,3 +1,4 @@
+/* ตั้งค่าสีพื้นหลังและตัวอักษรสำหรับธีม */
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -24,6 +25,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ทำให้การจัดรูปแบบกล่องในทุกองค์ประกอบเป็นมาตรฐาน */
 * {
   box-sizing: border-box;
   padding: 0;
@@ -35,8 +37,36 @@ a {
   text-decoration: none;
 }
 
+/* ทำให้รองรับธีม dark โดยกำหนด color scheme */
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
+}
+
+/* ตั้งค่าปุ่มเพิ่มเติมเพื่อความสวยงาม */
+button {
+  border: none;
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* การตกแต่งการ์ดสินค้า */
+.product-card {
+  background-color: var(--background);
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.product-card:hover {
+  transform: scale(1.05);
 }
